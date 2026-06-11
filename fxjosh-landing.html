@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FX Currency — Live Converter, Rates & Travel Budget</title>
+<meta name="description" content="FX Currency — live exchange rates, trip budget tracker, streaks, achievements, live news, crypto & 60 features. Royal purple. Built by Josh.">
+<meta name="theme-color" content="#0b0814">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   CSS DESIGN SYSTEM — FX Currency Landing
+   Royal Purple · v8.5.0 · 60 Features
+   ═══════════════════════════════════════════ */
+
+/* ── Reset ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+/* ── Variables ── */
+:root{
+  --bg:#0b0814;
+  --s1:#15101f;
+  --s2:#1d1730;
+  --s3:#261d3d;
+  --border:rgba(167,139,250,0.10);
+  --bh:rgba(167,139,250,0.18);
+  --text:#f1eef9;
+  --sub:#a39bb8;
+  --muted:#6b6080;
+  --accent:#8b5cf6;
+  --acc-light:#a078ff;
+  --acc-hero:#d0bcff;
+  --acc2:rgba(139,92,246,0.16);
+  --acc3:rgba(139,92,246,0.08);
+  --up:#34d399;
+  --down:#f87171;
+  --gold:#fbbf24;
+  --red:#f87171;
+  --mono:'JetBrains Mono',monospace;
+  --sans:'Sora',sans-serif;
+  --ease:cubic-bezier(0.16,1,0.3,1);
+  --spring:cubic-bezier(0.32,0.72,0,1);
+}
+
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--sans);
+  background:var(--bg);
+  color:var(--sub);
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  line-height:1.6;
+}
+h1,h2,h3,h4{font-family:var(--sans);color:var(--text);line-height:1.15}
+::selection{background:rgba(139,92,246,0.25);color:var(--acc-hero)}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--s3);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+img{max-width:100%;display:block}
+a{text-decoration:none;color:inherit}
+
+/* ── Reduced motion ── */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important}
+  .ticker-track{animation:none!important}
+  .float-phone{animation:none!important}
+}
+
+/* ── Loader ── */
+#loader{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .8s,visibility .8s}
+#loader.hidden{opacity:0;visibility:hidden;pointer-events:none}
+.load-bar{width:180px;height:2px;background:rgba(139,92,246,0.12);border-radius:1px;overflow:hidden;margin-top:18px}
+.load-fill{height:100%;background:linear-gradient(90deg,#8b5cf6,#a078ff);animation:loadFill 1.6s ease forwards}
+@keyframes loadFill{0%{width:0}60%{width:70%}100%{width:100%}}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+.load-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:pulse 1s ease infinite}
+
+/* ── Scroll progress ── */
+#scroll-progress{position:fixed;top:0;left:0;width:0%;height:2px;background:linear-gradient(90deg,#8b5cf6,#a078ff,#d0bcff);z-index:9998;box-shadow:0 0 10px rgba(139,92,246,.5);transition:width .05s linear}
+
+/* ── Section dots ── */
+.section-indicator{position:fixed;right:1.5rem;top:50%;transform:translateY(-50%);z-index:40;display:flex;flex-direction:column;gap:12px}
+.sec-dot{width:6px;height:6px;border-radius:50%;background:rgba(139,92,246,.12);transition:all .3s;cursor:pointer;border:1px solid transparent}
+.sec-dot.active{background:var(--accent);box-shadow:0 0 12px rgba(139,92,246,.5);transform:scale(1.5);border-color:rgba(139,92,246,.3)}
+.sec-dot:hover{background:rgba(139,92,246,.4)}
+@media(max-width:768px){.section-indicator{display:none}}
+
+/* ── Back to top ── */
+#back-to-top{position:fixed;bottom:2rem;right:2rem;z-index:50;width:40px;height:40px;border-radius:12px;background:rgba(21,16,31,.92);border:1px solid var(--border);color:var(--accent);display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;visibility:hidden;transform:translateY(10px);transition:all .3s;backdrop-filter:blur(8px)}
+#back-to-top.visible{opacity:1;visibility:visible;transform:translateY(0)}
+#back-to-top:hover{border-color:var(--bh);box-shadow:0 0 20px rgba(139,92,246,.12)}
+
+/* ── Glass cards ── */
+.glass{background:linear-gradient(135deg,rgba(29,23,48,.9),rgba(21,16,31,.95));backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:16px;transition:border-color .3s,box-shadow .3s,transform .3s;contain:layout style paint}
+.glass:hover{border-color:var(--bh);box-shadow:0 0 30px rgba(139,92,246,.06)}
+.glass-gold{background:linear-gradient(135deg,rgba(29,23,48,.9),rgba(21,16,31,.95));border:1px solid rgba(251,191,36,.1);border-radius:16px;transition:border-color .3s,box-shadow .3s,transform .3s}
+.glass-gold:hover{border-color:rgba(251,191,36,.25)}
+.glass-red{background:linear-gradient(135deg,rgba(29,23,48,.9),rgba(21,16,31,.95));border:1px solid rgba(248,113,113,.1);border-radius:16px;transition:border-color .3s,box-shadow .3s,transform .3s}
+.glass-red:hover{border-color:rgba(248,113,113,.25)}
+.glass-streak{background:linear-gradient(135deg,rgba(29,23,48,.9),rgba(21,16,31,.95));border:1px solid rgba(249,115,22,.15);border-radius:16px;transition:border-color .3s,box-shadow .3s,transform .3s}
+.glass-streak:hover{border-color:rgba(249,115,22,.3)}
+
+/* ── Dividers ── */
+.divider{height:1px;background:linear-gradient(90deg,transparent,rgba(139,92,246,.15),transparent)}
+
+/* ── Hero bg ── */
+.hero-bg{background:radial-gradient(ellipse at 25% 20%,rgba(139,92,246,.08) 0%,transparent 55%),radial-gradient(ellipse at 75% 80%,rgba(167,139,250,.04) 0%,transparent 50%),var(--bg)}
+
+/* ── Nav ── */
+.nav-link{position:relative}
+.nav-link::after{content:'';position:absolute;bottom:-2px;left:50%;width:0;height:1px;background:var(--accent);transition:width .3s,left .3s;transform:translateX(-50%)}
+.nav-link:hover::after,.nav-link.active-nav::after{width:100%}
+.nav-link.active-nav{color:var(--acc-light)!important}
+
+/* ── Reveal ── */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s cubic-bezier(.4,0,.2,1),transform .7s cubic-bezier(.4,0,.2,1)}.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* ── Feature cards ── */
+.feat-card{position:relative;overflow:hidden;transition:transform .3s,border-color .3s,box-shadow .3s}
+.feat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--feat-color,#8b5cf6),transparent);opacity:0;transition:opacity .3s}
+.feat-card:hover::before{opacity:1}
+.feat-card:hover{transform:translateY(-3px)}
+
+/* ── Stat fill ── */
+.stat-fill{height:100%;border-radius:2px;transition:width 1.5s cubic-bezier(.4,0,.2,1);width:0%}
+
+/* ── Counter ── */
+.counter{font-variant-numeric:tabular-nums}
+
+/* ── Animations ── */
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:translateY(0)}}
+@keyframes floatPhone{0%,100%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(-14px) rotate(-1.5deg)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes tickerScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes drawLine{from{stroke-dashoffset:300}to{stroke-dashoffset:0}}
+@keyframes dotPop{from{r:0;opacity:0}to{r:3.5;opacity:1}}
+@keyframes gradientPulse{0%,100%{opacity:.07}50%{opacity:.14}}
+@keyframes tagPop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes flamePulse{0%,100%{filter:brightness(1) drop-shadow(0 0 4px rgba(249,115,22,.4))}50%{filter:brightness(1.15) drop-shadow(0 0 8px rgba(249,115,22,.6))}}
+@keyframes streakGlow{0%,100%{box-shadow:0 0 0 0 rgba(249,115,22,0)}50%{box-shadow:0 0 16px rgba(249,115,22,.15)}}
+@keyframes shimmer{0%{background-position:200% center}100%{background-position:-200% center}}
+
+.cursor-blink{animation:blink 1s step-end infinite}
+.float-phone{animation:floatPhone 5s ease-in-out infinite}
+
+/* ── Ticker ── */
+.ticker-track{display:flex;animation:tickerScroll 35s linear infinite;white-space:nowrap;will-change:transform}
+.ticker-wrap{overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:rgba(21,16,31,.6)}
+
+/* ── Phone mockup ── */
+.phone-shell{border:2px solid rgba(139,92,246,.2);border-radius:36px;background:linear-gradient(145deg,var(--s2),var(--bg));box-shadow:0 0 60px rgba(139,92,246,.1),0 0 120px rgba(139,92,246,.04),inset 0 1px 0 rgba(255,255,255,.04)}
+.phone-notch{width:80px;height:22px;background:var(--bg);border-radius:0 0 14px 14px;margin:0 auto}
+.phone-screen{background:var(--bg);border-radius:24px;overflow:hidden}
+
+/* ── Tag ── */
+.tag{display:inline-flex;align-items:center;gap:4px;background:var(--acc2);border:1px solid rgba(139,92,246,.2);border-radius:99px;padding:3px 10px;font-size:9px;font-weight:700;color:var(--accent);letter-spacing:.06em;text-transform:uppercase;font-family:var(--mono)}
+.tag-gold{background:rgba(251,191,36,.08);border-color:rgba(251,191,36,.2);color:var(--gold)}
+.tag-red{background:rgba(248,113,113,.08);border-color:rgba(248,113,113,.2);color:var(--red)}
+.tag-streak{background:rgba(249,115,22,.08);border-color:rgba(249,115,22,.2);color:#f97316}
+
+/* ── Download btn ── */
+.dl-btn{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,rgba(139,92,246,.15),rgba(139,92,246,.08));border:1px solid rgba(139,92,246,.3);border-radius:14px;padding:14px 24px;color:var(--accent);font-weight:700;transition:all .3s;backdrop-filter:blur(8px);font-family:var(--sans)}
+.dl-btn:hover{background:linear-gradient(135deg,rgba(139,92,246,.25),rgba(139,92,246,.12));border-color:rgba(139,92,246,.5);box-shadow:0 0 30px rgba(139,92,246,.15);transform:translateY(-2px)}
+
+/* ── Sparkline SVG ── */
+.spark-line{fill:none;stroke:var(--accent);stroke-width:1.5;stroke-linecap:round;stroke-dasharray:300;stroke-dashoffset:300;animation:drawLine 1.2s ease forwards}
+.spark-line-up{stroke:var(--up)}
+.spark-line-down{stroke:var(--down)}
+.spark-dot{opacity:0;animation:dotPop .4s ease .9s forwards;fill:var(--accent)}
+.spark-dot-up{fill:var(--up)}
+.spark-dot-down{fill:var(--down)}
+
+/* ── Number pill ── */
+.num-pill{font-family:var(--mono);background:var(--acc2);border:1px solid rgba(139,92,246,.18);border-radius:8px;padding:2px 8px;font-size:11px;color:var(--accent);font-weight:700}
+
+/* ── Accordion ── */
+.acc-content{max-height:0;overflow:hidden;transition:max-height .5s cubic-bezier(.4,0,.2,1)}
+.acc-content.open{max-height:500px}
+
+/* ── Mobile menu ── */
+#mobile-menu{transform-origin:top;transition:all .3s cubic-bezier(.4,0,.2,1)}
+#mobile-menu.menu-hidden{opacity:0;transform:scaleY(0);max-height:0}
+#mobile-menu.menu-visible{opacity:1;transform:scaleY(1);max-height:400px}
+
+/* ── Tooltip ── */
+[data-tip]{position:relative;cursor:help}
+[data-tip]::before{content:attr(data-tip);position:absolute;bottom:100%;left:50%;transform:translateX(-50%) translateY(-4px);padding:5px 10px;background:var(--s2);border:1px solid var(--border);border-radius:6px;font-size:10px;color:var(--sub);white-space:nowrap;opacity:0;visibility:hidden;transition:all .2s;z-index:10;pointer-events:none;font-family:var(--mono)}
+[data-tip]:hover::before{opacity:1;visibility:visible;transform:translateX(-50%) translateY(-8px)}
+
+/* ── Noise overlay ── */
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.3}
+
+/* ── Grid lines ── */
+.grid-lines{background-image:linear-gradient(rgba(139,92,246,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(139,92,246,.02) 1px,transparent 1px);background-size:48px 48px}
+
+/* ── CTA glow ── */
+.cta-glow{background:radial-gradient(ellipse at 50% 100%,rgba(139,92,246,.12) 0%,transparent 70%)}
+
+/* ── Version badge ── */
+.ver-badge{display:inline-flex;align-items:center;gap:6px;background:var(--acc3);border:1px solid rgba(139,92,246,.15);border-radius:99px;padding:4px 12px;font-size:9px;font-family:var(--mono);color:rgba(139,92,246,.7);text-transform:uppercase;letter-spacing:.1em}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse .8s ease infinite}
+
+/* ── Canvas ── */
+canvas{position:absolute;inset:0;z-index:0;pointer-events:none}
+
+/* ── Streak mini ── */
+.streak-mini{display:flex;align-items:center;gap:8px;padding:6px 10px;background:rgba(249,115,22,.06);border:1px solid rgba(249,115,22,.15);border-radius:10px}
+.streak-flame{width:14px;height:14px;animation:flamePulse 2s ease infinite}
+.streak-dots{display:flex;gap:3px}
+.streak-dot-fill{width:5px;height:5px;border-radius:50%;background:#f97316}
+.streak-dot-empty{width:5px;height:5px;border-radius:50%;background:rgba(249,115,22,.2)}
+
+/* ── Section label ── */
+.section-label{font-family:var(--mono);text-transform:uppercase;letter-spacing:.4em;font-size:9px;color:rgba(139,92,246,.4);margin-bottom:12px}
+.section-line{width:48px;height:1px;margin:0 auto 20px;background:linear-gradient(90deg,transparent,rgba(139,92,246,.4),transparent)}
+
+/* ── Screen showcase tabs ── */
+.screen-tabs{display:flex;gap:4px;justify-content:center;flex-wrap:wrap}
+.screen-tab{padding:8px 16px;border-radius:99px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:11px;font-weight:600;cursor:pointer;transition:all .25s;font-family:var(--sans)}
+.screen-tab.active{background:var(--acc2);border-color:rgba(139,92,246,.3);color:var(--accent)}
+.screen-tab:hover{border-color:var(--bh);color:var(--sub)}
+
+/* ── Shimmer text ── */
+.shimmer-text{background:linear-gradient(90deg,var(--accent),var(--acc-hero),var(--acc-light),var(--accent));background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 4s linear infinite}
+
+/* ── Responsive ── */
+@media(max-width:640px){
+  .hero-title{font-size:2.5rem!important}
+  .phone-shell{width:220px!important}
+  .float-tags .tag{display:none}
+  .stats-grid{grid-template-columns:repeat(2,1fr)!important}
+}
+@media(max-width:480px){
+  .hero-title{font-size:2rem!important}
+}
+</style>
+</head>
+<body>
+
+<!-- Loader -->
+<div id="loader" role="status">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+    <div class="load-dot"></div>
+    <p style="font-family:var(--mono);font-size:11px;letter-spacing:.35em;text-transform:uppercase;color:rgba(139,92,246,.5)">Connecting to live rates</p>
+  </div>
+  <div class="load-bar"><div class="load-fill"></div></div>
+  <p style="font-family:var(--mono);margin-top:12px;font-size:10px;color:rgba(255,255,255,.15)">FX CURRENCY · v8.5.0 · 60 FEATURES</p>
+</div>
+
+<div id="scroll-progress"></div>
+
+<!-- Section dots -->
+<nav class="section-indicator" aria-label="Section nav">
+  <a href="#features" class="sec-dot" data-section="features" data-tip="Features"></a>
+  <a href="#screens" class="sec-dot" data-section="screens" data-tip="App Screens"></a>
+  <a href="#rates" class="sec-dot" data-section="rates" data-tip="Live Rates"></a>
+  <a href="#pro" class="sec-dot" data-section="pro" data-tip="Pro"></a>
+  <a href="#faq" class="sec-dot" data-section="faq" data-tip="FAQ"></a>
+  <a href="#download" class="sec-dot" data-section="download" data-tip="Download"></a>
+</nav>
+
+<button id="back-to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 3L3 8M8 3L13 8M8 3V13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
+
+<!-- Nav -->
+<nav id="main-nav" class="fixed top-0 w-full z-50" style="position:fixed;top:0;width:100%;z-index:50;transition:all .5s;background:transparent">
+  <div style="max-width:1200px;margin:0 auto;padding:0 24px">
+    <div style="display:flex;justify-content:space-between;height:56px;align-items:center">
+      <a href="#" style="display:flex;align-items:center;gap:8px">
+        <span style="font-family:var(--mono);font-weight:700;letter-spacing:.15em;font-size:13px;color:var(--accent)">FX<span style="color:var(--text)">CURRENCY</span></span>
+        <span class="ver-badge"><span class="live-dot"></span>LIVE</span>
+      </a>
+      <div style="display:none;align-items:center;gap:20px" id="desktop-nav">
+        <a href="#features" class="nav-link" style="font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);transition:color .3s">Features</a>
+        <a href="#screens" class="nav-link" style="font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);transition:color .3s">Screens</a>
+        <a href="#rates" class="nav-link" style="font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);transition:color .3s">Live Rates</a>
+        <a href="#pro" class="nav-link" style="font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);transition:color .3s">Pro</a>
+        <a href="#faq" class="nav-link" style="font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);transition:color .3s">FAQ</a>
+        <a href="#download" class="dl-btn" style="font-size:12px;padding:8px 16px">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download
+        </a>
+      </div>
+      <button id="mobile-btn" style="display:block;background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;padding:8px;transition:color .3s" aria-label="Menu">☰</button>
+    </div>
+  </div>
+  <div id="mobile-menu" class="menu-hidden" style="border-top:1px solid var(--border);background:rgba(11,8,20,.97)">
+    <div style="padding:12px 24px;display:flex;flex-direction:column;gap:4px">
+      <a href="#features" style="display:block;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:10px 0;transition:color .3s">Features</a>
+      <a href="#screens" style="display:block;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:10px 0;transition:color .3s">App Screens</a>
+      <a href="#rates" style="display:block;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:10px 0;transition:color .3s">Live Rates</a>
+      <a href="#pro" style="display:block;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:10px 0;transition:color .3s">Pro</a>
+      <a href="#faq" style="display:block;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:10px 0;transition:color .3s">FAQ</a>
+      <a href="#download" style="display:block;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);padding:10px 0">↓ Download Free</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<header class="hero-bg grid-lines" style="min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(139,92,246,.05) 0%,transparent 70%);animation:gradientPulse 4s ease infinite"></div>
+  <div style="position:relative;z-index:10;max-width:1200px;margin:0 auto;padding:24px;padding-top:80px">
+    <div style="display:grid;grid-template-columns:1fr;gap:48px;align-items:center" id="hero-grid">
+      <!-- Left: Text -->
+      <div>
+        <div style="animation:fadeIn .5s ease both;animation-delay:.1s;margin-bottom:20px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <span class="tag"><span class="live-dot"></span>Free on Google Play</span>
+          <span class="tag-gold tag">v8.5.0 · 60 Features</span>
+          <span class="tag-streak tag">🔥 Streaks & Achievements</span>
+        </div>
+        <h1 class="hero-title" style="font-weight:800;font-size:3.5rem;margin-bottom:20px;animation:slideUp .7s ease both;animation-delay:.2s;letter-spacing:-.03em">
+          Currency<br>
+          <span class="shimmer-text">Built Different.</span>
+        </h1>
+        <p style="color:var(--sub);font-size:15px;line-height:1.7;margin-bottom:32px;max-width:520px;animation:fadeIn .5s ease both;animation-delay:.4s">
+          Live exchange rates, trip budget tracker, 7-day trend charts, rate alerts, live news, crypto rates, Duolingo-style streaks, achievements & 52 more features — all in one free app. Built by Josh ✦
+        </p>
+        <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:40px;animation:fadeIn .5s ease both;animation-delay:.55s">
+          <a href="https://play.google.com/store/apps/details?id=com.josh.fx" target="_blank" rel="noopener" class="dl-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-1 14.5v-9l7 4.5-7 4.5z" fill="currentColor"/></svg>
+            <div style="text-align:left">
+              <div style="font-family:var(--mono);font-size:9px;opacity:.6;letter-spacing:.12em">GET IT ON</div>
+              <div style="font-size:14px;font-weight:700">Google Play</div>
+            </div>
+          </a>
+          <a href="#features" style="display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px 20px;font-size:13px;font-weight:600;color:var(--sub);transition:all .3s">
+            See all features
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+        <!-- Stats -->
+        <div style="display:flex;gap:24px;flex-wrap:wrap;animation:fadeIn .5s ease both;animation-delay:.7s">
+          <div>
+            <p class="counter" data-target="114" style="font-family:var(--mono);font-weight:700;font-size:1.75rem;color:var(--text)">0</p>
+            <p style="font-family:var(--mono);font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;margin-top:2px">Currencies</p>
+          </div>
+          <div style="border-left:1px solid rgba(255,255,255,.06);padding-left:24px">
+            <p class="counter" data-target="60" style="font-family:var(--mono);font-weight:700;font-size:1.75rem;color:var(--text)">0</p>
+            <p style="font-family:var(--mono);font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;margin-top:2px">Features</p>
+          </div>
+          <div style="border-left:1px solid rgba(255,255,255,.06);padding-left:24px">
+            <p class="counter" data-target="5" style="font-family:var(--mono);font-weight:700;font-size:1.75rem;color:var(--text)">0</p>
+            <p style="font-family:var(--mono);font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;margin-top:2px">Languages</p>
+          </div>
+          <div style="border-left:1px solid rgba(255,255,255,.06);padding-left:24px">
+            <p style="font-family:var(--mono);font-weight:700;font-size:1.75rem;color:var(--accent)">Free</p>
+            <p style="font-family:var(--mono);font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;margin-top:2px">Always</p>
+          </div>
+        </div>
+      </div>
+      <!-- Right: Phone mockup -->
+      <div style="display:flex;justify-content:center;animation:fadeIn .8s ease both;animation-delay:.3s" id="phone-col">
+        <div class="float-phone" style="position:relative">
+          <!-- Glow behind phone -->
+          <div style="position:absolute;inset:0;border-radius:40px;background:radial-gradient(ellipse,rgba(139,92,246,.2) 0%,transparent 70%);filter:blur(30px);z-index:-1;transform:scale(1.3)"></div>
+          <div class="phone-shell" style="width:260px;position:relative;overflow:hidden;padding:10px 10px 20px">
+            <div class="phone-notch" style="margin-bottom:8px"></div>
+            <div class="phone-screen" style="padding:10px;min-height:460px">
+              <!-- Streak widget -->
+              <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:rgba(249,115,22,.06);border:1px solid rgba(249,115,22,.12);border-radius:10px;margin-bottom:6px;animation:streakGlow 3s ease infinite">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none"><path d="M12 23c-4.97 0-9-3.13-9-7 0-2.38 1.27-4.5 3.25-6C7.5 8.5 8 6 8 4c0 0 2 1 3 3.5C12 5 14 2 14 2s1.5 2.5 1.5 5c.5-1 1.5-2 1.5-2s1 2 1 4c1.98 1.5 3.25 3.62 3.25 6 0 3.87-4.03 7-9 7z" fill="url(#fg1)"/><defs><linearGradient id="fg1" x1="12" y1="2" x2="12" y2="23"><stop stop-color="#ff9600"/><stop offset="1" stop-color="#ff4b4b"/></linearGradient></defs></svg>
+                <div style="flex:1">
+                  <div style="display:flex;align-items:baseline;gap:4px">
+                    <span style="font-family:var(--mono);font-weight:700;font-size:12px;color:#f97316">12</span>
+                    <span style="font-family:var(--mono);font-size:7px;color:rgba(249,115,22,.6);text-transform:uppercase;letter-spacing:.1em">Day Streak</span>
+                  </div>
+                  <div style="display:flex;gap:3px;margin-top:3px">
+                    <div style="width:4px;height:4px;border-radius:50%;background:#f97316"></div>
+                    <div style="width:4px;height:4px;border-radius:50%;background:#f97316"></div>
+                    <div style="width:4px;height:4px;border-radius:50%;background:#f97316"></div>
+                    <div style="width:4px;height:4px;border-radius:50%;background:#f97316"></div>
+                    <div style="width:4px;height:4px;border-radius:50%;background:#f97316"></div>
+                    <div style="width:4px;height:4px;border-radius:50%;background:rgba(249,115,22,.2)"></div>
+                    <div style="width:4px;height:4px;border-radius:50%;background:rgba(249,115,22,.2)"></div>
+                  </div>
+                </div>
+                <div style="font-size:10px;opacity:.5">🛍️</div>
+              </div>
+              <!-- Header -->
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+                <div style="font-family:var(--mono);font-size:8px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;font-weight:700">FX Converter</div>
+                <div style="display:flex;align-items:center;gap:4px;background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.2);border-radius:8px;padding:2px 6px">
+                  <div style="width:4px;height:4px;border-radius:50%;background:var(--accent);animation:pulse 1.5s ease infinite"></div>
+                  <span style="font-family:var(--mono);font-size:7px;color:var(--accent);font-weight:700">LIVE</span>
+                </div>
+              </div>
+              <!-- Rate strip -->
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 8px;background:rgba(29,23,48,.8);border:1px solid var(--border);border-radius:10px;margin-bottom:6px">
+                <div>
+                  <div style="font-family:var(--mono);font-size:7px;color:var(--muted);text-transform:uppercase">USD</div>
+                  <div style="font-family:var(--mono);font-weight:700;font-size:12px;color:var(--text)">0.7922</div>
+                </div>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(139,92,246,.4)" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                <div style="text-align:right">
+                  <div style="font-family:var(--mono);font-size:7px;color:var(--muted);text-transform:uppercase">GBP</div>
+                  <div style="font-family:var(--mono);font-weight:700;font-size:12px;color:var(--up)">+0.83%</div>
+                </div>
+              </div>
+              <!-- Sparkline -->
+              <svg viewBox="0 0 220 24" style="width:100%;height:18px;margin-bottom:6px" preserveAspectRatio="none">
+                <defs><linearGradient id="sg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.2"/><stop offset="100%" stop-color="#8b5cf6" stop-opacity="0"/></linearGradient></defs>
+                <path d="M0,18 L22,16 L44,19 L66,14 L88,11 L110,13 L132,9 L154,6 L176,8 L198,4 L220,6 L220,24 L0,24 Z" fill="url(#sg2)"/>
+                <path class="spark-line" d="M0,18 L22,16 L44,19 L66,14 L88,11 L110,13 L132,9 L154,6 L176,8 L198,4 L220,6"/>
+                <circle class="spark-dot" cx="220" cy="6" r="3"/>
+              </svg>
+              <!-- From input -->
+              <div style="padding:8px 10px;background:rgba(29,23,48,.9);border:1px solid rgba(139,92,246,.12);border-radius:12px;margin-bottom:4px">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px">
+                  <span style="font-size:14px">🇺🇸</span>
+                  <span style="font-family:var(--mono);font-weight:700;font-size:9px;color:var(--accent)">USD</span>
+                  <span style="font-family:var(--mono);font-size:7px;color:var(--muted)">US Dollar</span>
+                </div>
+                <div style="font-family:var(--mono);font-weight:700;font-size:20px;color:var(--text);letter-spacing:-.02em">1,000</div>
+              </div>
+              <!-- Swap -->
+              <div style="display:flex;justify-content:center;margin:2px 0">
+                <div style="width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--acc2);border:1px solid rgba(139,92,246,.2)">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
+                </div>
+              </div>
+              <!-- To input -->
+              <div style="padding:8px 10px;background:rgba(29,23,48,.9);border:1px solid rgba(139,92,246,.12);border-radius:12px;margin-bottom:6px">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px">
+                  <span style="font-size:14px">🇯🇲</span>
+                  <span style="font-family:var(--mono);font-weight:700;font-size:9px;color:var(--accent)">JMD</span>
+                  <span style="font-family:var(--mono);font-size:7px;color:var(--muted)">Jamaican Dollar</span>
+                </div>
+                <div style="font-family:var(--mono);font-weight:700;font-size:20px;color:var(--accent);letter-spacing:-.02em">157,306</div>
+              </div>
+              <!-- Multi output -->
+              <div style="display:flex;flex-direction:column;gap:2px;margin-bottom:6px">
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 8px;background:rgba(29,23,48,.5);border-radius:6px">
+                  <span style="font-size:11px">🇪🇺 <span style="font-family:var(--mono);font-size:7px;color:var(--muted)">EUR</span></span>
+                  <span style="font-family:var(--mono);font-weight:700;font-size:9px;color:var(--text)">€922.50</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 8px;background:rgba(29,23,48,.5);border-radius:6px">
+                  <span style="font-size:11px">🇬🇧 <span style="font-family:var(--mono);font-size:7px;color:var(--muted)">GBP</span></span>
+                  <span style="font-family:var(--mono);font-weight:700;font-size:9px;color:var(--text)">£792.20</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 8px;background:rgba(29,23,48,.5);border-radius:6px">
+                  <span style="font-size:11px">🇯🇵 <span style="font-family:var(--mono);font-size:7px;color:var(--muted)">JPY</span></span>
+                  <span style="font-family:var(--mono);font-weight:700;font-size:9px;color:var(--text)">¥148,600</span>
+                </div>
+              </div>
+              <!-- Bottom nav mock -->
+              <div style="display:flex;justify-content:space-around;padding:6px 0 2px;border-top:1px solid var(--border);margin-top:auto">
+                <div style="text-align:center">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
+                  <div style="font-family:var(--mono);font-size:6px;color:var(--accent);margin-top:1px">Convert</div>
+                </div>
+                <div style="text-align:center">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" opacity=".4"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  <div style="font-family:var(--mono);font-size:6px;color:var(--muted);opacity:.4;margin-top:1px">Trends</div>
+                </div>
+                <div style="text-align:center">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" opacity=".4"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                  <div style="font-family:var(--mono);font-size:6px;color:var(--muted);opacity:.4;margin-top:1px">Board</div>
+                </div>
+                <div style="text-align:center">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" opacity=".4"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                  <div style="font-family:var(--mono);font-size:6px;color:var(--muted);opacity:.4;margin-top:1px">Budget</div>
+                </div>
+                <div style="text-align:center">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" opacity=".4"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                  <div style="font-family:var(--mono);font-size:6px;color:var(--muted);opacity:.4;margin-top:1px">Settings</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Floating tags -->
+          <div class="float-tags">
+            <div class="tag" style="position:absolute;left:-16px;top:60px;animation:tagPop .5s ease 1.2s both">114 currencies</div>
+            <div class="tag tag-gold" style="position:absolute;right:-16px;top:140px;animation:tagPop .5s ease 1.4s both">Live News</div>
+            <div class="tag tag-streak" style="position:absolute;left:-16px;bottom:100px;animation:tagPop .5s ease 1.6s both">🔥 Streaks</div>
+            <div class="tag" style="position:absolute;right:-16px;bottom:40px;animation:tagPop .5s ease 1.8s both">₿ Crypto</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="position:absolute;bottom:0;left:0;right:0;height:120px;background:linear-gradient(to top,var(--bg),transparent);z-index:5"></div>
+</header>
+
+<!-- Rate Ticker -->
+<div class="ticker-wrap" style="padding:8px 0;position:relative;z-index:10">
+  <div class="ticker-track">
+    <span style="font-family:var(--mono);padding:0 24px;font-size:10px;color:rgba(139,92,246,.5)">USD/GBP <span style="color:var(--accent)">0.7922</span> ▲0.83%</span>
+    <span style="font-family:var(--mono);padding:0 8px;font-size:10px;color:rgba(255,255,255,.1)">•</span>
+    <span style="font-family:var(--mono);padding:0 24px;font-size:10px;color:rgba(139,92,246,.5)">USD/EUR <span style="color:var(--accent)">0.9480</span> ▲0.12%</span>
+    <span style="font-family:var(--mono);padding:0 8px;font-size:10px;color:rgba(255,255,255,.1)">•</span>
+    <span style="font-family:var(--mono);padding:0 24px;font-size:10px;color:rgba(248,113,113,.5)">USD/JPY <span style="color:var(--down)">148.62</span> ▼0.24%</span>
+    <span style="font-family:var(--mono);padding:0 8px;font-size:10px;color:rgba(255,255,255,.1)">•</span>
+    <span style="font-family:var(--mono);padding:0 24px;font-size:10px;color:rgba(139,92,246,.5)">USD/JMD <span style="color:var(--accent)">157.30</span> ▲0.68%</span>
+    <span style="font-family:var(--mono);padding:0 8px;font-size:10px;color:rgba(255,255,255,.1)">•</span>
+    <span style="font-family:var(--mono);padding:0 24px;font-size:10px;color:rgba(139,92,246,.5)">BTC/USD <span style="color:var(--up)">107,450</span> ▲2.1%</span>
+    <span style="font-family:var(--mono);padding:0 8px;font-size:10px;color:rgba(255,255,255,.1)">•</span>
+    <span style="font-family:var(--mono);padding:0 24px;font-size:10px;color:rgba(139,92,246,.5)">ETH/USD <span style="color:var(--up)">2,598</span> ▲1.5%</span>
+    <span style="font-family:var(--mono);padding:0 8px;font-size:10px;color:rgba(255,255,255,.1)">•</span>
+    <span style="font-family:var(--mono);padding:0 24px;font-size:10px;color:rgba(248,113,113,.5)">USD/NGN <span style="color:var(--down)">1605.0</span> ▼0.47%</span>
+    <span style="font-family:var(--mono);padding:0 8px;font-size:10px;color:rgba(255,255,255,.1)">•</span>
+    <span style="font-family:var(--mono);padding:0 24px;font-size:10px;color:rgba(139,92,246,.5)">USD/CAD <span style="color:var(--accent)">1.4431</span> ▲0.53%</span>
+    <span style="font-family:var(--mono);padding:0 8px;font-size:10px;color:rgba(255,255,255,.1)">•</span>
+    <!-- duplicate for seamless loop -->
+    <span style="font-family:var(--mono);padding:0 24px;font-size:10px;color:rgba(139,92,246,.5)">USD/GBP <span style="color:var(--accent)">0.7922</span> ▲0.83%</span>
+    <span style="font-family:var(--mono);padding:0 8px;font-size:10px;color:rgba(255,255,255,.1)">•</span>
+    <span style="font-family:var(--mono);padding:0 24px;font-size:10px;color:rgba(139,92,246,.5)">USD/EUR <span style="color:var(--accent)">0.9480</span> ▲0.12%</span>
+    <span style="font-family:var(--mono);padding:0 8px;font-size:10px;color:rgba(255,255,255,.1)">•</span>
+    <span style="font-family:var(--mono);padding:0 24px;font-size:10px;color:rgba(248,113,113,.5)">USD/JPY <span style="color:var(--down)">148.62</span> ▼0.24%</span>
+    <span style="font-family:var(--mono);padding:0 8px;font-size:10px;color:rgba(255,255,255,.1)">•</span>
+    <span style="font-family:var(--mono);padding:0 24px;font-size:10px;color:rgba(139,92,246,.5)">USD/JMD <span style="color:var(--accent)">157.30</span> ▲0.68%</span>
+    <span style="font-family:var(--mono);padding:0 8px;font-size:10px;color:rgba(255,255,255,.1)">•</span>
+    <span style="font-family:var(--mono);padding:0 24px;font-size:10px;color:rgba(139,92,246,.5)">BTC/USD <span style="color:var(--up)">107,450</span> ▲2.1%</span>
+    <span style="font-family:var(--mono);padding:0 8px;font-size:10px;color:rgba(255,255,255,.1)">•</span>
+    <span style="font-family:var(--mono);padding:0 24px;font-size:10px;color:rgba(139,92,246,.5)">ETH/USD <span style="color:var(--up)">2,598</span> ▲1.5%</span>
+  </div>
+</div>
+
+<main style="max-width:1200px;margin:0 auto;padding:0 16px;position:relative;z-index:10">
+
+  <!-- Stats -->
+  <div style="padding:64px 0 32px" class="reveal">
+    <div class="stats-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+      <div class="glass feat-card" style="padding:20px;text-align:center;--feat-color:#8b5cf6">
+        <p class="counter" data-target="114" style="font-family:var(--mono);font-size:1.75rem;font-weight:700;color:var(--accent)">0</p>
+        <p style="font-family:var(--mono);margin-top:4px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;font-size:9px">Currencies</p>
+      </div>
+      <div class="glass feat-card" style="padding:20px;text-align:center;--feat-color:#8b5cf6">
+        <p class="counter" data-target="60" style="font-family:var(--mono);font-size:1.75rem;font-weight:700;color:var(--accent)">0</p>
+        <p style="font-family:var(--mono);margin-top:4px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;font-size:9px">Features</p>
+      </div>
+      <div class="glass-gold feat-card" style="padding:20px;text-align:center;--feat-color:#fbbf24">
+        <p style="font-family:var(--mono);font-size:1.75rem;font-weight:700;color:var(--gold)">4</p>
+        <p style="font-family:var(--mono);margin-top:4px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;font-size:9px">Live Rate APIs</p>
+      </div>
+      <div class="glass-streak feat-card" style="padding:20px;text-align:center;--feat-color:#f97316">
+        <p style="font-family:var(--mono);font-size:1.75rem;font-weight:700;color:#f97316">🔥</p>
+        <p style="font-family:var(--mono);margin-top:4px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;font-size:9px">Streaks Built-In</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider" style="margin:8px 0"></div>
+
+  <!-- Features -->
+  <section id="features" style="scroll-margin-top:80px;padding:80px 0" class="reveal">
+    <div style="text-align:center;margin-bottom:48px">
+      <p class="section-label">FEATURE SET 01</p>
+      <h2 style="font-size:clamp(1.75rem,4vw,2.25rem);font-weight:800;margin-bottom:16px;letter-spacing:-.02em">Everything You Need.<br><span style="color:var(--accent)">Nothing You Don't.</span></h2>
+      <div class="section-line"></div>
+      <p style="color:var(--muted);max-width:600px;margin:0 auto;font-size:14px">FX Currency packs 60 production-grade features into a single lightweight app. Royal purple theme, Duolingo-style streaks, live news, crypto rates & offline support.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-bottom:40px">
+      <!-- Feature 1 -->
+      <div class="feat-card glass" style="padding:24px;--feat-color:#8b5cf6">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <div style="width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;background:var(--acc2)">💱</div>
+          <span class="tag">Core</span>
+        </div>
+        <h3 style="font-weight:700;margin-bottom:8px;font-size:14px">Live Currency Converter</h3>
+        <p style="color:var(--muted);font-size:12px;line-height:1.6">Bidirectional conversion, math expression input (50+30*2), fee calculator with custom %, tip buttons, multi-output for 5+ currencies simultaneously.</p>
+        <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap">
+          <span class="num-pill">4 APIs</span>
+          <span class="num-pill">5min refresh</span>
+        </div>
+      </div>
+      <!-- Feature 2 -->
+      <div class="feat-card glass" style="padding:24px;--feat-color:#fbbf24">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <div style="width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;background:rgba(251,191,36,.1)">📈</div>
+          <span class="tag tag-gold">Trends</span>
+        </div>
+        <h3 style="font-weight:700;margin-bottom:8px;font-size:14px">7/14/30-Day Charts + Live News</h3>
+        <p style="color:var(--muted);font-size:12px;line-height:1.6">Animated Catmull-Rom trend charts, Watch List with sparklines, live RSS news from Forex/Crypto/Markets feeds, news digest dropdown.</p>
+        <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap">
+          <span class="num-pill">Curved SVG</span>
+          <span class="num-pill">RSS Feeds</span>
+        </div>
+      </div>
+      <!-- Feature 3 -->
+      <div class="feat-card glass" style="padding:24px;--feat-color:#8b5cf6">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <div style="width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;background:var(--acc2)">✈️</div>
+          <span class="tag">Budget</span>
+        </div>
+        <h3 style="font-weight:700;margin-bottom:8px;font-size:14px">Trip Budget Tracker</h3>
+        <p style="color:var(--muted);font-size:12px;line-height:1.6">Multiple trip profiles, emoji categories, daily average, projected spend, budget streak tracking, CSV export, and shareable summary.</p>
+        <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap">
+          <span class="num-pill">5 categories</span>
+          <span class="num-pill">CSV export</span>
+        </div>
+      </div>
+      <!-- Feature 4: Streaks (NEW) -->
+      <div class="feat-card glass-streak" style="padding:24px;--feat-color:#f97316">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <div style="width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;background:rgba(249,115,22,.1)">🔥</div>
+          <span class="tag tag-streak">Gamification</span>
+        </div>
+        <h3 style="font-weight:700;margin-bottom:8px;font-size:14px">Duolingo-Style Streaks</h3>
+        <p style="color:var(--muted);font-size:12px;line-height:1.6">Daily conversion streaks with 7-day dots, streak freezes, XP system, 15 level titles, achievement badges, gem economy, Josh mascot with 6 emotional states.</p>
+        <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap">
+          <span class="num-pill" style="background:rgba(249,115,22,.08);border-color:rgba(249,115,22,.18);color:#f97316">6 mascot states</span>
+          <span class="num-pill" style="background:rgba(249,115,22,.08);border-color:rgba(249,115,22,.18);color:#f97316">15 levels</span>
+        </div>
+      </div>
+      <!-- Feature 5 -->
+      <div class="feat-card glass-gold" style="padding:24px;--feat-color:#fbbf24">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <div style="width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;background:rgba(251,191,36,.1)">🔔</div>
+          <span class="tag tag-gold">Alerts</span>
+        </div>
+        <h3 style="font-weight:700;margin-bottom:8px;font-size:14px">Rate Alerts & Smart Notifications</h3>
+        <p style="color:var(--muted);font-size:12px;line-height:1.6">Set target rates for any pair. Context-aware smart notifications: streak risk, return welcome, goal nudges. Priority-ranked with 3/day cap.</p>
+        <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap">
+          <span class="num-pill" style="background:rgba(251,191,36,.08);border-color:rgba(251,191,36,.18);color:var(--gold)">Push Notifications</span>
+        </div>
+      </div>
+      <!-- Feature 6: Crypto (NEW) -->
+      <div class="feat-card glass" style="padding:24px;--feat-color:#8b5cf6">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <div style="width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;background:var(--acc2)">₿</div>
+          <span class="tag">Crypto</span>
+        </div>
+        <h3 style="font-weight:700;margin-bottom:8px;font-size:14px">BTC, ETH & BNB Live Rates</h3>
+        <p style="color:var(--muted);font-size:12px;line-height:1.6">3 major cryptocurrencies tracked via CoinGecko API. Convert between crypto and any of the 111 fiat currencies. Preserved across fiat refreshes.</p>
+        <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap">
+          <span class="num-pill">CoinGecko</span>
+          <span class="num-pill">3 cryptos</span>
+        </div>
+      </div>
+      <!-- Feature 7 -->
+      <div class="feat-card glass-red" style="padding:24px;--feat-color:#f87171">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <div style="width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;background:rgba(248,113,113,.1)">📊</div>
+          <span class="tag tag-red">Analytics</span>
+        </div>
+        <h3 style="font-weight:700;margin-bottom:8px;font-size:14px">Correlation Heatmap</h3>
+        <p style="color:var(--muted);font-size:12px;line-height:1.6">Color grid showing how currencies move relative to each other. Green = positive, red = negative. Auto-sized N×N matrix optimized for mobile.</p>
+        <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap">
+          <span class="num-pill" style="background:rgba(248,113,113,.08);border-color:rgba(248,113,113,.18);color:var(--red)">6 currencies</span>
+        </div>
+      </div>
+      <!-- Feature 8 -->
+      <div class="feat-card glass" style="padding:24px;--feat-color:#8b5cf6">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <div style="width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;background:var(--acc2)">🫧</div>
+          <span class="tag">Visual</span>
+        </div>
+        <h3 style="font-weight:700;margin-bottom:8px;font-size:14px">Liquid Glass Mode</h3>
+        <p style="color:var(--muted);font-size:12px;line-height:1.6">Optional visual mode with a soft glowing cursor-follow effect, ripple animations on touch, and glassmorphism blur. Toggle on/off in Settings.</p>
+        <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap">
+          <span class="num-pill">GPU-friendly</span>
+        </div>
+      </div>
+      <!-- Feature 9 -->
+      <div class="feat-card glass" style="padding:24px;--feat-color:#8b5cf6">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <div style="width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;background:var(--acc2)">⚡</div>
+          <span class="tag">Performance</span>
+        </div>
+        <h3 style="font-weight:700;margin-bottom:8px;font-size:14px">3 Performance Tiers</h3>
+        <p style="color:var(--muted);font-size:12px;line-height:1.6">✨ Smooth (full effects), ⚖️ Balanced (capped animations), 🔋 Battery Saver (zero animations). Auto-benchmarked on first run. Manual override in Settings.</p>
+        <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap">
+          <span class="num-pill">FPS Benchmark</span>
+          <span class="num-pill">Auto-detect</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- All 60 Features -->
+    <div class="glass" style="padding:32px;border-radius:20px">
+      <h3 style="font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:10px;font-size:14px"><span style="color:var(--accent)">▸</span> All 60 Features at a Glance</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:6px">
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Live Currency Converter</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">4-API Fallback Chain</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Math Expression Input</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Fee & Tip Calculator</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Multi-Currency Output</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Voice Input 🎤</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Conversion Receipt</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Brag Card Share</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">7/14/30-Day Charts</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Watch List Sparklines</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Live RSS News Engine</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">News Digest Dropdown</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Correlation Heatmap</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Time Machine</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Break-Even Calculator</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Trip Budget Tracker</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Multi-Stop Trip Planner</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">BTC/ETH/BNB Crypto ₿</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Duolingo Streaks 🔥</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Achievement Badges</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">XP & 15 Level Titles</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Josh Mascot (6 states)</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Gem Economy & Shop</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Streak Freeze System</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Daily Goal Ring</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Rate Alerts</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Smart Notifications</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Recurring Reminders</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Dashboard Board</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Weekly Activity Dots</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">XP Progress Bar</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Quick Reference Grid</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Conversion History</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">CSV Export</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Split Bill Calculator</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Dark + Light Mode</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Liquid Glass Mode 🫧</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">3 Performance Tiers ⚡</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">5 Languages (i18n)</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Keyboard Shortcuts</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Haptic Feedback</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Pull-to-Refresh</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Clipboard Smart Banner</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">7-Step Onboarding</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Auto-Detect Currency</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Trend Prediction</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Volatility Badge</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Android Widget</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Precise Conversions</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Changelog Browser</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Smart Chips</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Confetti Celebrations</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Achievement Popups</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Streak History Graph</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Works Offline (PWA)</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Compact Widget Bar</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Budget Streak 🔥</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Squircle UI Polish</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Royal Purple Theme 👑</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(29,23,48,.5)"><span style="color:var(--accent);font-size:10px">✓</span><span style="color:var(--sub);font-size:12px">Base Currency Picker</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider" style="margin:8px 0"></div>
+
+  <!-- App Screens -->
+  <section id="screens" style="scroll-margin-top:80px;padding:80px 0" class="reveal">
+    <div style="text-align:center;margin-bottom:48px">
+      <p class="section-label">FEATURE SET 02</p>
+      <h2 style="font-size:clamp(1.75rem,4vw,2.25rem);font-weight:800;margin-bottom:16px;letter-spacing:-.02em">5 Screens.<br><span style="color:var(--accent)">Zero Clutter.</span></h2>
+      <div class="section-line"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px">
+      <div class="feat-card glass" style="padding:20px;text-align:center;--feat-color:#8b5cf6">
+        <div style="font-size:1.75rem;margin-bottom:10px">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
+        </div>
+        <h4 style="font-weight:700;font-size:14px;margin-bottom:4px">Convert</h4>
+        <p style="color:var(--muted);font-size:11px">Streak widget, converter, fees, voice input, sparkline, multi-output, receipt</p>
+      </div>
+      <div class="feat-card glass" style="padding:20px;text-align:center;--feat-color:#fbbf24">
+        <div style="font-size:1.75rem;margin-bottom:10px">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <h4 style="font-weight:700;font-size:14px;margin-bottom:4px">Trends</h4>
+        <p style="color:var(--muted);font-size:11px">Charts, watch list, heatmap, time machine, live news, news digest, base picker</p>
+      </div>
+      <div class="feat-card glass" style="padding:20px;text-align:center;--feat-color:#8b5cf6">
+        <div style="font-size:1.75rem;margin-bottom:10px">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        </div>
+        <h4 style="font-weight:700;font-size:14px;margin-bottom:4px">Board</h4>
+        <p style="color:var(--muted);font-size:11px">Daily goal ring, streak card, weekly dots, XP bar, Josh mascot, currency cards</p>
+      </div>
+      <div class="feat-card glass" style="padding:20px;text-align:center;--feat-color:#f87171">
+        <div style="font-size:1.75rem;margin-bottom:10px">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        </div>
+        <h4 style="font-weight:700;font-size:14px;margin-bottom:4px">Budget</h4>
+        <p style="color:var(--muted);font-size:11px">Trip tracker, expenses, categories, daily avg, projected spend, CSV export</p>
+      </div>
+      <div class="feat-card glass" style="padding:20px;text-align:center;--feat-color:#8b5cf6">
+        <div style="font-size:1.75rem;margin-bottom:10px">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </div>
+        <h4 style="font-weight:700;font-size:14px;margin-bottom:4px">Settings</h4>
+        <p style="color:var(--muted);font-size:11px">Alerts, themes, Liquid Glass, perf tiers, languages, streak graph, changelog</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider" style="margin:8px 0"></div>
+
+  <!-- Live Rates -->
+  <section id="rates" style="scroll-margin-top:80px;padding:80px 0" class="reveal">
+    <div style="text-align:center;margin-bottom:48px">
+      <p class="section-label">FEATURE SET 03</p>
+      <h2 style="font-size:clamp(1.75rem,4vw,2.25rem);font-weight:800;margin-bottom:16px;letter-spacing:-.02em">4-API Fallback Chain.<br><span style="color:var(--accent)">Rates Always Available.</span></h2>
+      <div class="section-line"></div>
+      <p style="color:var(--muted);max-width:600px;margin:0 auto;font-size:14px">FX Currency tries 4 different live rate APIs in sequence. If one fails, it falls back to the next instantly — so you always get live rates, never an error screen.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;margin-bottom:24px">
+      <div class="glass" style="padding:28px;border-radius:20px">
+        <h3 style="font-weight:700;margin-bottom:20px;font-size:14px;display:flex;align-items:center;gap:8px"><span style="color:var(--accent)">▸</span> API Priority Chain</h3>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:700;font-size:11px;background:var(--acc2);color:var(--accent);flex-shrink:0">1</span>
+            <div style="flex:1">
+              <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px">fawazahmed0 CDN (jsDelivr)</div>
+              <div style="height:5px;border-radius:3px;background:rgba(255,255,255,.06)"><div class="stat-fill" data-width="95" style="background:var(--accent);border-radius:3px"></div></div>
+            </div>
+            <span class="num-pill">99.9%</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:700;font-size:11px;background:rgba(139,92,246,.08);color:var(--accent);flex-shrink:0">2</span>
+            <div style="flex:1">
+              <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px">currency-api.pages.dev (CF)</div>
+              <div style="height:5px;border-radius:3px;background:rgba(255,255,255,.06)"><div class="stat-fill" data-width="92" style="background:rgba(139,92,246,.6);border-radius:3px"></div></div>
+            </div>
+            <span class="num-pill">Fallback 1</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:700;font-size:11px;background:rgba(251,191,36,.08);color:var(--gold);flex-shrink:0">3</span>
+            <div style="flex:1">
+              <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px">open.er-api.com</div>
+              <div style="height:5px;border-radius:3px;background:rgba(255,255,255,.06)"><div class="stat-fill" data-width="80" style="background:var(--gold);border-radius:3px"></div></div>
+            </div>
+            <span class="num-pill" style="background:rgba(251,191,36,.08);border-color:rgba(251,191,36,.18);color:var(--gold)">Fallback 2</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:700;font-size:11px;background:rgba(248,113,113,.08);color:var(--red);flex-shrink:0">4</span>
+            <div style="flex:1">
+              <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px">exchangerate-api.com</div>
+              <div style="height:5px;border-radius:3px;background:rgba(255,255,255,.06)"><div class="stat-fill" data-width="75" style="background:rgba(248,113,113,.6);border-radius:3px"></div></div>
+            </div>
+            <span class="num-pill" style="background:rgba(248,113,113,.08);border-color:rgba(248,113,113,.18);color:var(--red)">Fallback 3</span>
+          </div>
+        </div>
+        <div style="margin-top:16px;padding:10px 14px;border-radius:12px;background:var(--acc3);border:1px solid rgba(139,92,246,.1)">
+          <p style="font-size:12px;color:var(--muted)">If all 4 APIs fail, FX Currency uses 114 hardcoded fallback rates (including crypto) so you can still convert offline. A stale rate banner shows the age of cached data.</p>
+        </div>
+      </div>
+      <!-- Watch List -->
+      <div class="glass" style="padding:28px;border-radius:20px">
+        <h3 style="font-weight:700;margin-bottom:20px;font-size:14px;display:flex;align-items:center;gap:8px"><span style="color:var(--accent)">▸</span> Watch List — Animated Sparklines</h3>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px">
+          <div style="padding:14px;text-align:center;background:rgba(29,23,48,.8);border:1px solid var(--border);border-radius:12px">
+            <div style="font-size:18px;margin-bottom:4px">🇬🇧</div>
+            <div style="font-family:var(--mono);font-weight:700;font-size:12px;color:var(--text)">GBP</div>
+            <div style="font-family:var(--mono);font-size:11px;color:var(--up)">+0.89%</div>
+            <svg viewBox="0 0 56 22" style="width:100%;margin-top:6px" preserveAspectRatio="none">
+              <path d="M2,18 L8,16 L14,19 L20,14 L26,11 L32,13 L38,9 L44,6 L50,8 L54,5" class="spark-line-up spark-line" style="animation-delay:.2s;stroke:var(--up)"/>
+              <circle cx="54" cy="5" r="2" class="spark-dot-up spark-dot" style="animation-delay:1.1s;fill:var(--up)"/>
+            </svg>
+          </div>
+          <div style="padding:14px;text-align:center;background:rgba(29,23,48,.8);border:1px solid var(--border);border-radius:12px">
+            <div style="font-size:18px;margin-bottom:4px">🇪🇺</div>
+            <div style="font-family:var(--mono);font-weight:700;font-size:12px;color:var(--text)">EUR</div>
+            <div style="font-family:var(--mono);font-size:11px;color:var(--up)">+0.03%</div>
+            <svg viewBox="0 0 56 22" style="width:100%;margin-top:6px" preserveAspectRatio="none">
+              <path d="M2,12 L8,10 L14,13 L20,11 L26,9 L32,12 L38,10 L44,8 L50,11 L54,9" class="spark-line" style="animation-delay:.4s"/>
+              <circle cx="54" cy="9" r="2" class="spark-dot" style="animation-delay:1.3s"/>
+            </svg>
+          </div>
+          <div style="padding:14px;text-align:center;background:rgba(29,23,48,.8);border:1px solid rgba(248,113,113,.08);border-radius:12px">
+            <div style="font-size:18px;margin-bottom:4px">🇯🇵</div>
+            <div style="font-family:var(--mono);font-weight:700;font-size:12px;color:var(--text)">JPY</div>
+            <div style="font-family:var(--mono);font-size:11px;color:var(--down)">−0.18%</div>
+            <svg viewBox="0 0 56 22" style="width:100%;margin-top:6px" preserveAspectRatio="none">
+              <path d="M2,6 L8,7 L14,9 L20,8 L26,11 L32,10 L38,13 L44,14 L50,16 L54,18" class="spark-line-down spark-line" style="animation-delay:.6s;stroke:var(--down)"/>
+              <circle cx="54" cy="18" r="2" class="spark-dot-down spark-dot" style="animation-delay:1.5s;fill:var(--down)"/>
+            </svg>
+          </div>
+          <div style="padding:14px;text-align:center;background:rgba(29,23,48,.8);border:1px solid rgba(139,92,246,.15);border-radius:12px">
+            <div style="font-size:18px;margin-bottom:4px">🇯🇲</div>
+            <div style="font-family:var(--mono);font-weight:700;font-size:12px;color:var(--text)">JMD</div>
+            <div style="font-family:var(--mono);font-size:11px;color:var(--up)">+0.24%</div>
+            <svg viewBox="0 0 56 22" style="width:100%;margin-top:6px" preserveAspectRatio="none">
+              <path d="M2,14 L8,12 L14,15 L20,13 L26,11 L32,10 L38,12 L44,9 L50,10 L54,7" class="spark-line" style="animation-delay:.8s"/>
+              <circle cx="54" cy="7" r="2" class="spark-dot" style="animation-delay:1.7s"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider" style="margin:8px 0"></div>
+
+  <!-- Pro Section -->
+  <section id="pro" style="scroll-margin-top:80px;padding:80px 0" class="reveal">
+    <div style="text-align:center;margin-bottom:48px">
+      <p class="section-label" style="color:rgba(251,191,36,.4)">FEATURE SET 04</p>
+      <h2 style="font-size:clamp(1.75rem,4vw,2.25rem);font-weight:800;margin-bottom:16px;letter-spacing:-.02em">FX Currency <span style="color:var(--gold)">Pro</span></h2>
+      <div class="section-line" style="background:linear-gradient(90deg,transparent,rgba(251,191,36,.4),transparent)"></div>
+      <p style="color:var(--muted);max-width:600px;margin:0 auto;font-size:14px">Unlock the full FX Currency experience with Pro — unlimited history, advanced analytics, and priority features.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px">
+      <div class="glass-gold" style="padding:28px;border-radius:20px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
+          <span style="font-size:24px">⭐</span>
+          <div>
+            <div style="font-weight:700;color:var(--text);font-size:18px">Free</div>
+            <div style="font-family:var(--mono);font-size:11px;color:var(--muted)">Forever</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--sub)"><span style="color:var(--accent);font-size:12px">✓</span> Live currency converter</div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--sub)"><span style="color:var(--accent);font-size:12px">✓</span> 7/14/30-day trend charts</div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--sub)"><span style="color:var(--accent);font-size:12px">✓</span> Trip budget tracker</div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--sub)"><span style="color:var(--accent);font-size:12px">✓</span> Rate alerts & notifications</div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--sub)"><span style="color:var(--accent);font-size:12px">✓</span> Streaks, achievements & XP</div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--sub)"><span style="color:var(--accent);font-size:12px">✓</span> Live news & crypto rates</div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--sub)"><span style="color:var(--accent);font-size:12px">✓</span> 5 multi-currency output rows</div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text)"><span style="color:var(--accent);font-size:12px">✓</span> All 114 currencies offline</div>
+        </div>
+      </div>
+      <div style="padding:28px;border-radius:20px;background:linear-gradient(135deg,rgba(38,29,61,.95),rgba(21,16,31,.95));border:1px solid rgba(251,191,36,.2);box-shadow:0 0 40px rgba(251,191,36,.05)">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
+          <span style="font-size:24px">👑</span>
+          <div>
+            <div style="font-weight:700;color:var(--text);font-size:18px">Pro</div>
+            <div style="font-family:var(--mono);font-size:11px;color:rgba(251,191,36,.6)">$1.99/mo or $14.99/yr</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text)"><span style="color:var(--gold);font-size:12px">✦</span> Everything in Free</div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text)"><span style="color:var(--gold);font-size:12px">✦</span> Unlimited conversion history</div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text)"><span style="color:var(--gold);font-size:12px">✦</span> 15 multi-currency output rows</div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text)"><span style="color:var(--gold);font-size:12px">✦</span> Rate alert sounds (Web Audio)</div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text)"><span style="color:var(--gold);font-size:12px">✦</span> Trend predictions + volatility</div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text)"><span style="color:var(--gold);font-size:12px">✦</span> Weekly FX digest report</div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text)"><span style="color:var(--gold);font-size:12px">✦</span> Custom heatmap currencies</div>
+        </div>
+        <div style="margin-top:20px;padding:10px 14px;border-radius:12px;text-align:center;font-family:var(--mono);font-size:10px;color:rgba(251,191,36,.7);background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.15)">Ad-free · Cancel anytime · Secure payment</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider" style="margin:8px 0"></div>
+
+  <!-- FAQ -->
+  <section id="faq" style="scroll-margin-top:80px;padding:80px 0" class="reveal">
+    <div style="text-align:center;margin-bottom:48px">
+      <p class="section-label">FEATURE SET 05</p>
+      <h2 style="font-size:clamp(1.75rem,4vw,2.25rem);font-weight:800;margin-bottom:16px;letter-spacing:-.02em">Questions?<br><span style="color:var(--accent)">We got answers.</span></h2>
+      <div class="section-line"></div>
+    </div>
+    <div style="max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:10px" id="faq-list">
+      <div class="glass" style="overflow:hidden">
+        <button class="acc-btn" onclick="toggleAcc(this)" style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:18px 20px;text-align:left;background:none;border:none;cursor:pointer;font-family:var(--sans)">
+          <span style="font-weight:600;color:var(--text);font-size:14px">Is FX Currency actually free?</span>
+          <span class="acc-icon" style="font-family:var(--mono);color:var(--muted);font-size:14px;transition:transform .3s">+</span>
+        </button>
+        <div class="acc-content">
+          <div style="padding:0 20px 18px;color:var(--sub);font-size:13px;line-height:1.7">Yes, 100% free forever. All 114 currencies (including crypto), all 5 screens, rate alerts, trip budgeting, streaks, achievements, live news, offline support — all free. FX Currency Pro is an optional upgrade for power users who want unlimited history and advanced analytics.</div>
+        </div>
+      </div>
+      <div class="glass" style="overflow:hidden">
+        <button class="acc-btn" onclick="toggleAcc(this)" style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:18px 20px;text-align:left;background:none;border:none;cursor:pointer;font-family:var(--sans)">
+          <span style="font-weight:600;color:var(--text);font-size:14px">Does it work offline?</span>
+          <span class="acc-icon" style="font-family:var(--mono);color:var(--muted);font-size:14px;transition:transform .3s">+</span>
+        </button>
+        <div class="acc-content">
+          <div style="padding:0 20px 18px;color:var(--sub);font-size:13px;line-height:1.7">Yes. FX Currency has a service worker that caches the last fetched rates. When you go offline, the app shows cached rates and clearly labels how old they are. 114 hardcoded fallback rates (including BTC, ETH, BNB) ensure the app never shows an error screen even on first launch without internet.</div>
+        </div>
+      </div>
+      <div class="glass" style="overflow:hidden">
+        <button class="acc-btn" onclick="toggleAcc(this)" style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:18px 20px;text-align:left;background:none;border:none;cursor:pointer;font-family:var(--sans)">
+          <span style="font-weight:600;color:var(--text);font-size:14px">How often are rates updated?</span>
+          <span class="acc-icon" style="font-family:var(--mono);color:var(--muted);font-size:14px;transition:transform .3s">+</span>
+        </button>
+        <div class="acc-content">
+          <div style="padding:0 20px 18px;color:var(--sub);font-size:13px;line-height:1.7">Every 5 minutes while the app is open. FX Currency uses a 4-API fallback chain — if the first API fails, it tries the next one instantly. Crypto rates (BTC, ETH, BNB) are fetched separately via CoinGecko and preserved across fiat refreshes.</div>
+        </div>
+      </div>
+      <div class="glass" style="overflow:hidden">
+        <button class="acc-btn" onclick="toggleAcc(this)" style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:18px 20px;text-align:left;background:none;border:none;cursor:pointer;font-family:var(--sans)">
+          <span style="font-weight:600;color:var(--text);font-size:14px">What's the streak system?</span>
+          <span class="acc-icon" style="font-family:var(--mono);color:var(--muted);font-size:14px;transition:transform .3s">+</span>
+        </button>
+        <div class="acc-content">
+          <div style="padding:0 20px 18px;color:var(--sub);font-size:13px;line-height:1.7">Like Duolingo but for currency! Make at least one genuine conversion per day to keep your streak alive. You earn XP, unlock 15 level titles, collect achievement badges, and a Josh mascot reacts to your progress with 6 emotional states. Streak freezes are earned every 7 days (max 2). There's even a native Android home-screen widget.</div>
+        </div>
+      </div>
+      <div class="glass" style="overflow:hidden">
+        <button class="acc-btn" onclick="toggleAcc(this)" style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:18px 20px;text-align:left;background:none;border:none;cursor:pointer;font-family:var(--sans)">
+          <span style="font-weight:600;color:var(--text);font-size:14px">What platforms is FX Currency on?</span>
+          <span class="acc-icon" style="font-family:var(--mono);color:var(--muted);font-size:14px;transition:transform .3s">+</span>
+        </button>
+        <div class="acc-content">
+          <div style="padding:0 20px 18px;color:var(--sub);font-size:13px;line-height:1.7">FX Currency is on the Google Play Store (Android) and installable as a PWA on any device with a browser. iOS support is planned. It's a Capacitor-wrapped web app, so it works on any Chromium-based browser too.</div>
+        </div>
+      </div>
+      <div class="glass" style="overflow:hidden">
+        <button class="acc-btn" onclick="toggleAcc(this)" style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:18px 20px;text-align:left;background:none;border:none;cursor:pointer;font-family:var(--sans)">
+          <span style="font-weight:600;color:var(--text);font-size:14px">Who built FX Currency?</span>
+          <span class="acc-icon" style="font-family:var(--mono);color:var(--muted);font-size:14px;transition:transform .3s">+</span>
+        </button>
+        <div class="acc-content">
+          <div style="padding:0 20px 18px;color:var(--sub);font-size:13px;line-height:1.7">FX Currency was built by Josh — a high school student. God first. Built different. ✦ 🙏</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider" style="margin:8px 0"></div>
+
+  <!-- Download CTA -->
+  <section id="download" style="scroll-margin-top:80px;padding:80px 0" class="reveal">
+    <div style="position:relative;border-radius:24px;overflow:hidden;border:1px solid var(--border)" class="cta-glow">
+      <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(29,23,48,.95),rgba(11,8,20,.99))"></div>
+      <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 100%,rgba(139,92,246,.12) 0%,transparent 65%)"></div>
+      <div style="position:relative;z-index:10;padding:80px 32px;text-align:center">
+        <div class="ver-badge" style="display:inline-flex;margin-bottom:24px"><span class="live-dot"></span>Free on Google Play</div>
+        <h2 style="font-size:clamp(2rem,5vw,3rem);font-weight:800;margin-bottom:16px;letter-spacing:-.03em">
+          Download FX Currency.<br>
+          <span class="shimmer-text">It's Free.</span>
+        </h2>
+        <p style="color:var(--muted);max-width:480px;margin:0 auto 40px;font-size:14px;line-height:1.7">114 currencies · 60 features · Streaks & achievements · Live news · Crypto · Works offline · No account required · Built by a student who needed a better converter and built one.</p>
+        <div style="display:flex;flex-direction:column;gap:12px;align-items:center">
+          <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center">
+            <a href="https://play.google.com/store/apps/details?id=com.josh.fx" target="_blank" rel="noopener" class="dl-btn" style="font-size:15px;padding:16px 28px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-1 14.5v-9l7 4.5-7 4.5z" fill="currentColor"/></svg>
+              <div style="text-align:left">
+                <div style="font-family:var(--mono);font-size:9px;opacity:.6;letter-spacing:.1em">GET IT ON</div>
+                <div style="font-weight:700;font-size:15px">Google Play</div>
+              </div>
+            </a>
+            <a href="#" style="display:inline-flex;align-items:center;gap:10px;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:16px 28px;font-size:14px;font-weight:600;color:var(--sub);transition:all .3s">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Install as PWA
+            </a>
+          </div>
+        </div>
+        <p style="font-family:var(--mono);margin-top:32px;font-size:9px;color:rgba(255,255,255,.15);letter-spacing:.1em">GOD FIRST · BUILT DIFFERENT · BUILT BY JOSH ✦</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Footer -->
+<footer style="border-top:1px solid var(--border);margin-top:32px;padding:48px 32px">
+  <div style="max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:20px">
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="font-family:var(--mono);font-weight:700;color:var(--accent);font-size:14px;letter-spacing:.1em">FXCURRENCY</span>
+      <span style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,.2)">v8.5.0 · 60 FEATURES</span>
+    </div>
+    <div style="display:flex;gap:20px">
+      <a href="#features" style="font-family:var(--mono);color:var(--muted);font-size:10px;letter-spacing:.08em;text-transform:uppercase;transition:color .3s">Features</a>
+      <a href="#pro" style="font-family:var(--mono);color:var(--muted);font-size:10px;letter-spacing:.08em;text-transform:uppercase;transition:color .3s">Pro</a>
+      <a href="#faq" style="font-family:var(--mono);color:var(--muted);font-size:10px;letter-spacing:.08em;text-transform:uppercase;transition:color .3s">FAQ</a>
+      <a href="#download" style="font-family:var(--mono);color:var(--muted);font-size:10px;letter-spacing:.08em;text-transform:uppercase;transition:color .3s">Download</a>
+    </div>
+    <p style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,.2)">© 2026 FX Currency · Built with ❤️ by Josh · God first 🙏</p>
+  </div>
+</footer>
+
+<script>
+// ═══ Loader ═══
+window.addEventListener('load', function() {
+  setTimeout(function() { document.getElementById('loader').classList.add('hidden'); }, 1800);
+});
+
+// ═══ Scroll progress + back-to-top (debounced) ═══
+var scrollTicking = false;
+window.addEventListener('scroll', function() {
+  if (!scrollTicking) {
+    requestAnimationFrame(function() {
+      var p = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+      document.getElementById('scroll-progress').style.width = p + '%';
+      document.getElementById('back-to-top').classList.toggle('visible', window.scrollY > 500);
+      scrollTicking = false;
+    });
+    scrollTicking = true;
+  }
+}, { passive: true });
+
+// ═══ Nav scroll effect ═══
+var navTicking = false;
+window.addEventListener('scroll', function() {
+  if (!navTicking) {
+    requestAnimationFrame(function() {
+      var nav = document.getElementById('main-nav');
+      if (window.scrollY > 40) {
+        nav.style.background = 'rgba(11,8,20,.95)';
+        nav.style.backdropFilter = 'blur(16px)';
+        nav.style.borderBottom = '1px solid var(--border)';
+      } else {
+        nav.style.background = 'transparent';
+        nav.style.backdropFilter = '';
+        nav.style.borderBottom = '';
+      }
+      navTicking = false;
+    });
+    navTicking = true;
+  }
+}, { passive: true });
+
+// ═══ Responsive nav ═══
+function updateNav() {
+  var w = window.innerWidth;
+  var dn = document.getElementById('desktop-nav');
+  var mb = document.getElementById('mobile-btn');
+  if (w >= 768) {
+    dn.style.display = 'flex';
+    mb.style.display = 'none';
+  } else {
+    dn.style.display = 'none';
+    mb.style.display = 'block';
+  }
+}
+updateNav();
+window.addEventListener('resize', updateNav);
+
+// ═══ Hero grid responsive ═══
+function updateHeroGrid() {
+  var grid = document.getElementById('hero-grid');
+  if (window.innerWidth >= 1024) {
+    grid.style.gridTemplateColumns = '1fr 1fr';
+  } else {
+    grid.style.gridTemplateColumns = '1fr';
+  }
+}
+updateHeroGrid();
+window.addEventListener('resize', updateHeroGrid);
+
+// ═══ Mobile menu ═══
+document.getElementById('mobile-btn').addEventListener('click', function() {
+  var m = document.getElementById('mobile-menu');
+  m.classList.toggle('menu-hidden');
+  m.classList.toggle('menu-visible');
+});
+document.querySelectorAll('#mobile-menu a').forEach(function(a) {
+  a.addEventListener('click', function() {
+    document.getElementById('mobile-menu').classList.add('menu-hidden');
+    document.getElementById('mobile-menu').classList.remove('menu-visible');
+  });
+});
+
+// ═══ Section dots & active nav ═══
+var sections = ['features','screens','rates','pro','faq','download'];
+var sectionObserver = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
+    if (e.isIntersecting) {
+      var id = e.target.id;
+      document.querySelectorAll('.sec-dot').forEach(function(d) { d.classList.toggle('active', d.dataset.section === id); });
+      document.querySelectorAll('.nav-link').forEach(function(l) { l.classList.toggle('active-nav', l.getAttribute('href') === '#' + id); });
+    }
+  });
+}, { threshold: 0.3 });
+sections.forEach(function(id) { var el = document.getElementById(id); if(el) sectionObserver.observe(el); });
+
+// ═══ Reveal on scroll ═══
+var revealObs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) { if(e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); } });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(function(el) { revealObs.observe(el); });
+
+// ═══ Stat bar fills ═══
+var statObs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.stat-fill').forEach(function(bar) {
+        setTimeout(function() { bar.style.width = (bar.dataset.width || 80) + '%'; }, 200);
+      });
+      statObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('.glass').forEach(function(el) { statObs.observe(el); });
+
+// ═══ Counter animation ═══
+function animateCounter(el) {
+  var target = parseInt(el.dataset.target);
+  if (isNaN(target)) return;
+  var dur = 1200;
+  var step = target / (dur / 16);
+  var current = 0;
+  var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reducedMotion) { el.textContent = target; return; }
+  var tick = setInterval(function() {
+    current = Math.min(current + step, target);
+    el.textContent = Math.floor(current);
+    if (current >= target) clearInterval(tick);
+  }, 16);
+}
+var counterObs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.counter').forEach(animateCounter);
+      counterObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('.reveal, header').forEach(function(el) { counterObs.observe(el); });
+
+// ═══ Accordion ═══
+function toggleAcc(btn) {
+  var content = btn.nextElementSibling;
+  var icon = btn.querySelector('.acc-icon');
+  var isOpen = content.classList.contains('open');
+  document.querySelectorAll('.acc-content').forEach(function(c) { c.classList.remove('open'); });
+  document.querySelectorAll('.acc-icon').forEach(function(i) { i.textContent = '+'; i.style.transform = ''; });
+  if (!isOpen) {
+    content.classList.add('open');
+    icon.textContent = '−';
+    icon.style.transform = 'rotate(0deg)';
+  }
+}
+
+// ═══ Hover effects for footer links ═══
+document.querySelectorAll('footer a').forEach(function(a) {
+  a.addEventListener('mouseenter', function() { a.style.color = 'var(--accent)'; });
+  a.addEventListener('mouseleave', function() { a.style.color = ''; });
+});
+
+// ═══ Secondary button hovers ═══
+document.querySelectorAll('a[href="#features"]').forEach(function(a) {
+  if (a.closest('header')) {
+    a.addEventListener('mouseenter', function() { a.style.color = 'var(--text)'; a.style.borderColor = 'rgba(255,255,255,.2)'; });
+    a.addEventListener('mouseleave', function() { a.style.color = ''; a.style.borderColor = ''; });
+  }
+});
+</script>
+</body>
+</html>
